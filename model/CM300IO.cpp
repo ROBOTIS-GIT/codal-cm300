@@ -1,7 +1,3 @@
-/*
-The MIT License (MIT)
-
-Copyright (c) 2017 Lancaster University.
 /*******************************************************************************
 * Copyright 2016 ROBOTIS CO., LTD.
 *
