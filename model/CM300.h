@@ -44,6 +44,7 @@ DEALINGS IN THE SOFTWARE.
 #include "NRF52Pin.h"
 
 #include "CM300IO.h"
+#include "CM300Serial.h"
 #include "CodalFiber.h"
 #include "MessageBus.h"
 
@@ -86,6 +87,8 @@ namespace codal
 
             /* With the above object, create an object like CM300IO and add it. */
             CM300IO             io;
+
+            CM300Serial         serial;
 
             NRFLowLevelTimer    timer1;
             Timer               timer;

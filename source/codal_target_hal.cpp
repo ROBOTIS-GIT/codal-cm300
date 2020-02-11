@@ -6,12 +6,12 @@
 
 void target_enable_irq()
 {
-    __enable_irq();
+    //__enable_irq();
 }
 
 void target_disable_irq()
 {
-    __disable_irq();
+    //__disable_irq();
 }
 
 void target_wait_for_event()
