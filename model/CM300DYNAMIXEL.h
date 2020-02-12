@@ -54,12 +54,11 @@ class SerialPortHandler : public DXLPortHandler
     {
       size_t ret = 0;
       dir_pin_.setDigitalValue(1);
-      while(dir_pin_.getDigitalValue() != 1);
 
-      ret = port_.sendChar((char)c);
-
+      ret = port_.putc((char)c);
+      while(port_.txBufferedSize());
+      
       dir_pin_.setDigitalValue(0);
-      while(dir_pin_.getDigitalValue() != 0);
 
       return ret;
     }
@@ -68,12 +67,14 @@ class SerialPortHandler : public DXLPortHandler
     {
       size_t ret = 0;
       dir_pin_.setDigitalValue(1);
-      while(dir_pin_.getDigitalValue() != 1);
 
-      ret = port_.send(buf, len);
+      for(ret=0;ret<len;ret++){
+        port_.putc(buf[ret]);
+      }
+    //   ret = port_.send(buf, len, codal::SerialMode::ASYNC);
+    //   while(port_.txBufferedSize());
 
       dir_pin_.setDigitalValue(0);
-      while(dir_pin_.getDigitalValue() != 0);
 
       return ret;
     }
@@ -107,6 +108,7 @@ namespace codal
         NRF52Pin dxl_tx_;
         NRF52Pin dxl_rx_;
         NRF52Pin dxl_dir_;
+        NRF52Pin dxl_pwr_;
         NRF52Serial dxl_serial_;
         SerialPortHandler dxl_port_;
 
