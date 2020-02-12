@@ -18,7 +18,7 @@
 #define DYNAMIXEL_PORT_HANDLER_HPP_
 
 #include <stdint.h>
-#include <stdio.h>
+#include <stddef.h>
 
 class DXLPortHandler
 {
