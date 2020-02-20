@@ -40,7 +40,7 @@ CM300DYNAMIXEL::CM300DYNAMIXEL()
   dxl_rx_(ID_PIN_P0_08, P0_8, PIN_CAPABILITY_DIGITAL),
   dxl_dir_(ID_PIN_P1_14, P1_14, PIN_CAPABILITY_DIGITAL),
   dxl_pwr_(ID_PIN_P1_08, P1_8, PIN_CAPABILITY_DIGITAL),
-  dxl_serial_(dxl_tx_, dxl_rx_, NRF_UARTE0),
+  dxl_serial_(dxl_tx_, dxl_rx_),
   dxl_port_(dxl_serial_, dxl_dir_)
 {
   dxl_pwr_.setDigitalValue(1);

@@ -26,7 +26,7 @@
 class SerialPortHandler : public DXLPortHandler
 {
   public:
-    SerialPortHandler(codal::Serial &port, codal::Pin &dir_pin)
+    SerialPortHandler(codal::NRF52Serial &port, codal::Pin &dir_pin)
      : DXLPortHandler(), port_(port), dir_pin_(dir_pin), baud_(57600)
     {}
 
@@ -47,7 +47,7 @@ class SerialPortHandler : public DXLPortHandler
 
     virtual int read()
     {
-      return port_.read();
+      return port_.getc();
     }
 
     virtual size_t write(uint8_t c)
@@ -68,11 +68,7 @@ class SerialPortHandler : public DXLPortHandler
       size_t ret = 0;
       dir_pin_.setDigitalValue(1);
 
-      for(ret=0;ret<len;ret++){
-        port_.putc(buf[ret]);
-      }
-    //   ret = port_.send(buf, len, codal::SerialMode::ASYNC);
-    //   while(port_.txBufferedSize());
+      ret = port_.write(buf, len, codal::SerialMode::SYNC_SPINWAIT);
 
       dir_pin_.setDigitalValue(0);
 
@@ -84,7 +80,9 @@ class SerialPortHandler : public DXLPortHandler
       baud_ = baud;
       port_.setBaud(baud);
       dir_pin_.setDigitalValue(0);
-      while(dir_pin_.getDigitalValue() != 0);
+
+      port_.setTxBufferSize(254);
+      port_.setRxBufferSize(254);
 
       setOpenState(true);      
     }
@@ -95,7 +93,7 @@ class SerialPortHandler : public DXLPortHandler
     }
 
   private:
-    codal::Serial &port_;
+    codal::NRF52Serial &port_;
     codal::Pin &dir_pin_;
     unsigned long baud_;
 };
