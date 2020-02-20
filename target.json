@@ -32,10 +32,7 @@
         "CODAL_DEBUG":"CODAL_DEBUG_DISABLED",
         "DEVICE_USB":0,
         "CODAL_TIMESTAMP":"uint64_t",
-        "PROCESSOR_WORD_TYPE":"uint32_t",
-        "NRFX_PRS_BOX_0_ENABLED": 0,
-        "NRFX_PRS_BOX_1_ENABLED": 0,
-        "NRFX_PRS_BOX_2_ENABLED": 0
+        "PROCESSOR_WORD_TYPE":"uint32_t"
     },
     "cpu_opts":"-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=softfp",
     "asm_flags":"-fno-exceptions -fno-unwind-tables --specs=nosys.specs -mcpu=cortex-m4 -mthumb",

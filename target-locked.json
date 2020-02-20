@@ -27,10 +27,7 @@
         "MESSAGE_BUS_LISTENER_MAX_QUEUE_DEPTH": 10, 
         "PROCESSOR_WORD_TYPE": "uint32_t", 
         "SCHEDULER_TICK_PERIOD_US": 4000, 
-        "USE_ACCEL_LSB": 0,
-        "NRFX_PRS_BOX_0_ENABLED": 0,
-        "NRFX_PRS_BOX_1_ENABLED": 0,
-        "NRFX_PRS_BOX_2_ENABLED": 0
+        "USE_ACCEL_LSB": 0
     }, 
     "cpp_flags": "-std=c++11 -fwrapv -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-unwind-tables -Wl,--gc-sections -Wl,--sort-common -Wl,--sort-section=alignment -Wno-array-bounds", 
     "cpu_opts": "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=softfp", 
