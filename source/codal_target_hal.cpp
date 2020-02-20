@@ -7,11 +7,13 @@
 void target_enable_irq()
 {
     //__enable_irq();
+    //MUTEX
 }
 
 void target_disable_irq()
 {
     //__disable_irq();
+    //MUTEX
 }
 
 void target_wait_for_event()
@@ -32,6 +34,26 @@ void target_reset()
 
 extern "C" void _start();
 extern "C" __attribute__((weak)) void user_init() {}
+
+#define NUM_VTOR_ENTRIES (NVIC_USER_IRQ_OFFSET + 48)
+
+class VtorCopy
+{
+public:
+    uint32_t vtorStorage[NUM_VTOR_ENTRIES];
+    VtorCopy()
+    {
+        if ((uint32_t)vtorStorage & 0xff)
+            target_panic(999);
+        auto origVtor = (void*)SCB->VTOR;
+        memcpy(vtorStorage, origVtor, sizeof(vtorStorage));
+        SCB->VTOR = (uint32_t)vtorStorage;
+        DMESG("relocate vtor to %x -> %x %x", origVtor, vtorStorage, SCB->VTOR);
+    }
+};
+
+// this needs to run after BSS sections are cleared (which happens at the beginning of _start())
+__attribute__((used, aligned(512))) static VtorCopy vtorCopy;
 
 extern "C" void target_start()
 {
