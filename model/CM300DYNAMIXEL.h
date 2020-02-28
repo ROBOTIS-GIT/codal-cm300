@@ -68,7 +68,7 @@ class SerialPortHandler : public DXLPortHandler
       size_t ret = 0;
       dir_pin_.setDigitalValue(1);
 
-      ret = port_.write(buf, len, codal::SerialMode::SYNC_SPINWAIT);
+      ret = port_.send(buf, len, codal::SerialMode::SYNC_SPINWAIT);
 
       dir_pin_.setDigitalValue(0);
 

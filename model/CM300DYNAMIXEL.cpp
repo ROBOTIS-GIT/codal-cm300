@@ -21,13 +21,12 @@
 #include "CodalConfig.h"
 #include "CM300DYNAMIXEL.h"
 #include "device_pinmap.h"
-
+#include "Timer.h"
 
 uint32_t dxl_getMillisecond()
 {
-  return SysTick->VAL;
+  return codal::system_timer_current_time();
 }
-
 
 using namespace codal;
 
