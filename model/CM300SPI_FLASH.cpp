@@ -113,9 +113,6 @@ void CM300SPI_Flash::setTxBuffer(uint8_t *tx_buffer, uint8_t command, int addr,
 int CM300SPI_Flash::transfer(uint8_t const *p_tx_buffer, uint32_t tx_length, uint8_t *p_rx_buffer,
                          uint32_t rx_length, PVoidCallback doneHandler, void *arg)
 {
-  check(tx_length <= SPI_FLASH_BUFFER_MAX_SIZE);
-  check(rx_length <= SPI_FLASH_BUFFER_MAX_SIZE);
-
   int ret = DEVICE_OK;
 
   cs_.setDigitalValue(0);
@@ -176,18 +173,12 @@ int CM300SPI_Flash::readBytes(uint32_t addr, void *buffer, uint32_t len)
   check(addr <= number_of_pages_ * SPIFLASH_PAGE_SIZE);
 
   int ret = DEVICE_OK;
-  uint32_t index = 0;
 
   setTxBuffer(write_buffer_, 0x03, addr, NULL, 0);
 
   waitBusy(1);
 
-  ret = transfer(write_buffer_, 4, read_buffer_, len + 4, irqDoneHandler_, this);
-
-  for (index = 0; index < len; index++)
-  {
-    ((uint8_t *)buffer)[index] = read_buffer_[index + 4];
-  }
+  ret = transfer(write_buffer_, 4, (uint8_t *)buffer, len, irqDoneHandler_, this);
 
   return ret;
 }

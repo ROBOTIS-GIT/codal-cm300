@@ -25,8 +25,6 @@
 #define SPI_FLASH_DENSITY_IN_MBYTES 8
 #define SPI_FLASH_NUM_OF_PAGE       (SPI_FLASH_DENSITY_IN_MBYTES * 1024 * 1024 / SPIFLASH_PAGE_SIZE)
 
-#define SPI_FLASH_BUFFER_MAX_SIZE   (4 + 2048)
-
 namespace codal
 {
     /**
@@ -42,7 +40,7 @@ namespace codal
             uint32_t          number_of_pages_;
             uint8_t           command_buffer_[4];
             uint8_t           write_buffer_[260];
-            uint8_t           read_buffer_[SPI_FLASH_BUFFER_MAX_SIZE];
+            uint8_t           read_buffer_[2];
             uint8_t           status_;
             volatile bool     transfer_done_;
 

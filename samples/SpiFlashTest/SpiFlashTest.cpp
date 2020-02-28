@@ -16,7 +16,8 @@ CM300Serial serial;
 CM300SPI_Flash spi_flash;
 
 uint8_t write_buffer[BUFFER_SIZE] = {0,};
-uint8_t read_buffer[BUFFER_SIZE] = {0,};
+// the first 4 bytes of read_buffer are empty due to 1 byte [read command] and 3 bytes [address]
+uint8_t read_buffer[BUFFER_SIZE + 4] = {0,};
 
 int main()
 {
@@ -45,7 +46,7 @@ static void spi_flash_task_function(void * pvParameter)
 
   spi_flash.writeDisable();
 
-  serial.uart.printf(" Start CM-300 SPI Flash test. Buffer size = %d\r\n", BUFFER_SIZE);
+  serial.uart.printf("Start CM-300 SPI Flash test. Buffer size = %d\r\n\r\n", BUFFER_SIZE);
 
   for(;;){
     // wait for button press and release
@@ -65,12 +66,12 @@ static void spi_flash_task_function(void * pvParameter)
     spi_flash.writeBytes(0, write_buffer, sizeof(write_buffer));
 
     serial.uart.printf("Read area starting from address 0 and save to [read data buffer].\r\n");
-    spi_flash.readBytes(0, read_buffer, BUFFER_SIZE);
+    spi_flash.readBytes(0, read_buffer, sizeof(read_buffer));
 
-    serial.uart.printf("Print [read data buffer].\r\nindex w  r\r\n\r\n");
-    for (i = 0; i < sizeof(read_buffer); i++)
+    serial.uart.printf("\r\nPrint [write data buffer] and [read data buffer].\r\nindex w  r\r\n");
+    for (i = 0; i < sizeof(read_buffer) - 4; i++)
     {
-      serial.uart.printf(" %d %d %d\r\n", i, write_buffer[i], read_buffer[i]);
+      serial.uart.printf(" %d    %d %d\r\n", i, write_buffer[i], read_buffer[4+i]);
 
       vTaskDelay(1);
     }
