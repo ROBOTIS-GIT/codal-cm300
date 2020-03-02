@@ -30,10 +30,11 @@ CM300 *cm300_device_instance = NULL;
   * that represent various device drivers used to control aspects of the CM300.
   */
 CM300::CM300() :
-    io(),
     timer1(NRF_TIMER1, TIMER1_IRQn),
     timer(timer1),
-    messageBus()
+    messageBus(),
+    io(),
+    serial()
 {
     // Clear our status
     status = 0;
@@ -57,10 +58,6 @@ CM300::CM300() :
         // Reset, so the changes can take effect.
         NVIC_SystemReset();
     }
-
-    // Configure serial port for debugging
-    //serial.set_flow_control(mbed::Serial::Disabled);
-    // serial.baud(115200);
 }
 
 /**
@@ -96,7 +93,7 @@ int CM300::init()
     }
 
     // Seed our random number generator
-    //seedRandom();
+    seedRandom(rand());
 
     // Create an event handler to trap any handlers being created for I2C services.
     // We do this to enable initialisation of those services only when they're used,
@@ -135,6 +132,16 @@ void CM300::idleCallback()
 #if DEVICE_DMESG_BUFFER_SIZE > 0
     codal_dmesg_flush();
 #endif
+}
+
+void CM300::blinkLed(uint32_t interval_ms)
+{
+    static uint32_t pre_time;
+
+    if(systemTime() - pre_time >= interval_ms){
+        pre_time = systemTime();
+        io.led.setDigitalValue(!io.led.getDigitalValue());
+    }
 }
 
 void nano_dmesg_flush()
