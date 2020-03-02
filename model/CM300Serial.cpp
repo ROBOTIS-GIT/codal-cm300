@@ -30,8 +30,10 @@ using namespace codal;
   */
 CM300Serial::CM300Serial() :
     //CM300
+    NRF52Serial(tx, rx),
     tx (ID_PIN_P0_26, P0_26, PIN_CAPABILITY_DIGITAL),
-    rx (ID_PIN_P0_27, P0_27, PIN_CAPABILITY_DIGITAL),
-    uart (tx, rx)
+    rx (ID_PIN_P0_27, P0_27, PIN_CAPABILITY_DIGITAL)
 {
+    configurePins(tx, rx);
+    setBaudrate(1000000);
 }

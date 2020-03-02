@@ -23,13 +23,12 @@
 
 namespace codal
 {
-    class CM300Serial
+    class CM300Serial : public NRF52Serial
     {
-        public:
             NRF52Pin          tx;
             NRF52Pin          rx;
-            NRF52Serial       uart;
 
+        public:
             /**
              * Constructor.
              */
