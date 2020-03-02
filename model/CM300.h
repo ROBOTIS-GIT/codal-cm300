@@ -32,9 +32,11 @@
 #include "Button.h"
 #include "Timer.h"
 
-#include "CM300IO.h"
 #include "CodalFiber.h"
 #include "MessageBus.h"
+
+#include "CM300IO.h"
+#include "CM300Serial.h"
 
 // Status flag values
 #define DEVICE_INITIALIZED                    0x01
@@ -47,7 +49,7 @@
  */
 namespace codal
 {
-    class CM300 : public CodalComponent
+    class CM300 : public CodalDevice, public CodalComponent
     {
         private:
             /**
@@ -60,32 +62,12 @@ namespace codal
             void onListenerRegisteredEvent(Event evt);
 
         public:
-            /* NRF52 object list */ 
-            // NRF52I2C
-            // NRF52Microphone
-            // NRF52PDM
-            // NRF52Pin
-            // NRF52PWM
-            // NRF52Radio
-            // NRF52SPI
-            // NRFLowLevelTimer
-            // ZSingleWireSerial
-
-            /* With the above object, create an object like CM300IO and add it. */
-            CM300IO             io;
-
             NRFLowLevelTimer    timer1;
             Timer               timer;
             MessageBus          messageBus;
 
-            //Button                      buttonA;
-
-            // Persistent key value store
-            //CM300Storage           storage;
-
-            // Bluetooth related member variables.
-            //CM300BLEManager		  bleManager;
-            //BLEDevice                   *ble;
+            CM300IO             io;
+            CM300Serial         serial;
 
             /**
              * Constructor.
@@ -134,6 +116,9 @@ namespace codal
              */
             //TODO: handle overflow case.
             unsigned long systemTime();
+
+            // Function to check operation using LED.
+            void blinkLed(uint32_t interval_ms);
     };
 
 
