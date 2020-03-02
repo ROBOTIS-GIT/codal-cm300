@@ -4,14 +4,34 @@
 #include "CodalCompat.h"
 #include "Timer.h"
 
+static int8_t irq_disabled;
+
+// codal::Serial is designed by Polling or Interrupt method without considering DMA.
+// In particular, printf forcibly disables interrupts using target_disable_irq(),
+// which does not match the behavior of UARTE using Event Interrupt.
+// For this reason, when used with the Serial::send() function,
+// there are several problems. We can solve this problem a bit
+// by checking the irq disabled state in the code. (not all exceptions have been handled yet)
+// Therefore, this function is necessary. (This function is used in nRF52Serial extern way)
+int8_t target_get_irq_disabled()
+{
+    return irq_disabled;
+}
+
 void target_enable_irq()
 {
-    //__enable_irq();
+    irq_disabled--;
+    if (irq_disabled <= 0) {
+        irq_disabled = 0;
+        __enable_irq();
+    }
 }
 
 void target_disable_irq()
 {
-    //__disable_irq();
+    irq_disabled++;
+    if (irq_disabled == 1)
+        __disable_irq();
 }
 
 void target_wait_for_event()
@@ -32,6 +52,26 @@ void target_reset()
 
 extern "C" void _start();
 extern "C" __attribute__((weak)) void user_init() {}
+
+#define NUM_VTOR_ENTRIES (NVIC_USER_IRQ_OFFSET + 48)
+
+class VtorCopy
+{
+public:
+    uint32_t vtorStorage[NUM_VTOR_ENTRIES];
+    VtorCopy()
+    {
+        if ((uint32_t)vtorStorage & 0xff)
+            target_panic(999);
+        auto origVtor = (void*)SCB->VTOR;
+        memcpy(vtorStorage, origVtor, sizeof(vtorStorage));
+        SCB->VTOR = (uint32_t)vtorStorage;
+        DMESG("relocate vtor to %x -> %x %x", origVtor, vtorStorage, SCB->VTOR);
+    }
+};
+
+// this needs to run after BSS sections are cleared (which happens at the beginning of _start())
+__attribute__((used, aligned(512))) static VtorCopy vtorCopy;
 
 extern "C" void target_start()
 {
@@ -68,16 +108,15 @@ struct PROCESSOR_TCB
 
 PROCESSOR_WORD_TYPE fiber_initial_stack_base()
 {
-    uint32_t mbed_stack_base;
+    uint32_t stack_base;
 
-#ifdef MBED_CONF_RTOS_PRESENT
-    extern osThreadAttr_t _main_thread_attr;
-    mbed_stack_base = (uint32_t)_main_thread_attr.stack_mem + _main_thread_attr.stack_size;
+#ifdef CONF_RTOS_PRESENT
+    // stack_base = main thread stack;
 #else
-    mbed_stack_base = DEVICE_STACK_BASE;
+    stack_base = DEVICE_STACK_BASE;
 #endif
 
-    return mbed_stack_base;
+    return (PROCESSOR_WORD_TYPE)stack_base;
 }
 
 void* tcb_allocate()
@@ -123,7 +162,7 @@ PROCESSOR_WORD_TYPE tcb_get_stack_base(void* tcb)
 
 PROCESSOR_WORD_TYPE get_current_sp()
 {
-#ifdef MBED_CONF_RTOS_PRESENT
+#ifdef CONF_RTOS_PRESENT
     return __get_PSP();
 #else
     return __get_MSP();
