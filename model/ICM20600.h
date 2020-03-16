@@ -24,33 +24,10 @@
 #include "Accelerometer.h"
 #include "Gyroscope.h"
 
-#include "NRF52Pin.h"
-#include "NRF52I2C.h"
-
 #define ICM20600_DEFAULT_ADDR  0x68
 #define ICM20600_WHO_AM_I  0x75
 
-#define ICM20600_CONFIG                 0x1A
-#define ICM20600_GYRO_CONFIG            0x1B
-#define ICM20600_ACCEL_CONFIG           0x1C
-#define ICM20600_ACCEL_CONFIG2          0x1D
-#define ICM20600_FIFO_EN                0x23
-#define ICM20600_PWR_MGMT_1             0x6B
-#define ICM20600_PWR_MGMT_2             0x6C
-#define ICM20600_GYRO_LP_MODE_CFG       0x1E
-
-#define ICM20600_GYRO_XOUT_H            0x43
-#define ICM20600_GYRO_XOUT_L            0x44
-#define ICM20600_GYRO_YOUT_H            0x45
-#define ICM20600_GYRO_YOUT_L            0x46
-#define ICM20600_GYRO_ZOUT_H            0x47
-#define ICM20600_GYRO_ZOUT_L            0x48
-#define ICM20600_ACCEL_XOUT_H           0x3b
-#define ICM20600_ACCEL_XOUT_L           0x3c
-#define ICM20600_ACCEL_YOUT_H           0x3d
-#define ICM20600_ACCEL_YOUT_L           0x3e
-#define ICM20600_ACCEL_ZOUT_H           0x3f
-#define ICM20600_ACCEL_ZOUT_L           0x40
+#define ICM20600_WHOAMI_VAL 0x11
 
 namespace codal
 {
@@ -61,14 +38,10 @@ namespace codal
         uint16_t        address;            // I2C address of this accelerometer.
         int16_t         temp;
         Sample3D        gyro;             // The gyro value
-
-        int16_t         gyroscale;
-        int16_t         Accelscale;
+        bool is_requesting = false;
 
         public:
-            /**
-             * Constructor.
-             */
+
         ICM20600(I2C &_i2c, Pin &_int1, CoordinateSpace &coordinateSpace, uint16_t address = ICM20600_DEFAULT_ADDR,  uint16_t id = DEVICE_ID_ACCELEROMETER);
 
         /**
