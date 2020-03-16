@@ -24,6 +24,7 @@
 #include "Accelerometer.h"
 #include "Gyroscope.h"
 
+#define ACCELEROMETER_TYPE_ICM20600  104 //0x68
 #define ICM20600_DEFAULT_ADDR  0x68
 #define ICM20600_WHO_AM_I  0x75
 
