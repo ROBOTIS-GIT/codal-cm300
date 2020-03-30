@@ -30,7 +30,7 @@ namespace codal
     /**
      * Represents a collection of all I/O pins exposed by the device.
      */
-    class CM300SPI_Flash : public SPIFlash
+    class CM300SPIFlash : public SPIFlash
     {
             NRF52Pin          mosi_;
             NRF52Pin          miso_;
@@ -68,7 +68,7 @@ namespace codal
              * Accepts a sequence of unique ID's used to distinguish events raised
              * by NRF52Pin instances on the default EventModel.
              */
-            CM300SPI_Flash();
+            CM300SPIFlash();
 
             virtual int numPages();
             virtual int readBytes(uint32_t addr, void *buffer, uint32_t len);

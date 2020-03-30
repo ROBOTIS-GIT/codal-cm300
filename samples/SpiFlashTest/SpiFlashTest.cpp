@@ -2,8 +2,8 @@
 CM300 cm;
 
 /* Sample global code START */
-#include "CM300SPI_Flash.h"
-CM300SPI_Flash spi_flash;
+#include "CM300SPIFlash.h"
+CM300SPIFlash spi_flash;
 /* Sample global code END */
 
 int main()

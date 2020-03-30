@@ -21,7 +21,7 @@
 
 #include "CodalConfig.h"
 #include "CM300IO.h"
-#include "CM300SPI_FLASH.h"
+#include "CM300SPIFlash.h"
 #include "device_pinmap.h"
 
 #define check(cond)                                                    \
@@ -38,7 +38,7 @@ using namespace codal;
   * Since there is only one SPI Flash on the device,
   * fix the SPI peripheral as SPIM0 and baudrate as 8Mbps.
   */
-CM300SPI_Flash::CM300SPI_Flash()
+CM300SPIFlash::CM300SPIFlash()
  :SPIFlash(),
   mosi_ (ID_PIN_P0_21, P0_21, PIN_CAPABILITY_DIGITAL),
   miso_ (ID_PIN_P0_23, P0_23, PIN_CAPABILITY_DIGITAL),
@@ -54,14 +54,14 @@ CM300SPI_Flash::CM300SPI_Flash()
 }
 
 //Static
-void CM300SPI_Flash::irqDoneHandler_(void *self_)
+void CM300SPIFlash::irqDoneHandler_(void *self_)
 {
-  CM300SPI_Flash *self = (CM300SPI_Flash *)self_;
+  CM300SPIFlash *self = (CM300SPIFlash *)self_;
 
   self->setTransferDoneFlag(true);
 }
 
-int CM300SPI_Flash::getStatusRegister1(uint8_t *status)
+int CM300SPIFlash::getStatusRegister1(uint8_t *status)
 {
   uint8_t ret;
 
@@ -78,7 +78,7 @@ int CM300SPI_Flash::getStatusRegister1(uint8_t *status)
   return ret;
 }
 
-void CM300SPI_Flash::setCommand(uint8_t command, int addr)
+void CM300SPIFlash::setCommand(uint8_t command, int addr)
 {
     command_buffer_[0] = command;
     command_buffer_[1] = addr >> 16;
@@ -86,7 +86,7 @@ void CM300SPI_Flash::setCommand(uint8_t command, int addr)
     command_buffer_[3] = addr >> 0;
 }
 
-void CM300SPI_Flash::setTxBuffer(uint8_t *tx_buffer, uint8_t command, int addr,
+void CM300SPIFlash::setTxBuffer(uint8_t *tx_buffer, uint8_t command, int addr,
                                  uint8_t *data_buffer, uint16_t data_length)
 {
   uint16_t index = 0;
@@ -110,7 +110,7 @@ void CM300SPI_Flash::setTxBuffer(uint8_t *tx_buffer, uint8_t command, int addr,
   }
 }
 
-int CM300SPI_Flash::transfer(uint8_t const *p_tx_buffer, uint32_t tx_length, uint8_t *p_rx_buffer,
+int CM300SPIFlash::transfer(uint8_t const *p_tx_buffer, uint32_t tx_length, uint8_t *p_rx_buffer,
                          uint32_t rx_length, PVoidCallback doneHandler, void *arg)
 {
   int ret = DEVICE_OK;
@@ -124,7 +124,7 @@ int CM300SPI_Flash::transfer(uint8_t const *p_tx_buffer, uint32_t tx_length, uin
   return ret;
 }
 
-void CM300SPI_Flash::writeDisable()
+void CM300SPIFlash::writeDisable()
 {
   getStatusRegister1(&status_);
 
@@ -136,7 +136,7 @@ void CM300SPI_Flash::writeDisable()
   }
 }
 
-void CM300SPI_Flash::writeEnable()
+void CM300SPIFlash::writeEnable()
 {
   getStatusRegister1(&status_);
 
@@ -148,7 +148,7 @@ void CM300SPI_Flash::writeEnable()
   }
 }
 
-int CM300SPI_Flash::waitBusy(int waitMS)
+int CM300SPIFlash::waitBusy(int waitMS)
 {
   do
   {
@@ -162,12 +162,12 @@ int CM300SPI_Flash::waitBusy(int waitMS)
   return DEVICE_OK;
 }
 
-int CM300SPI_Flash::numPages()
+int CM300SPIFlash::numPages()
 {
   return number_of_pages_;
 }
 
-int CM300SPI_Flash::readBytes(uint32_t addr, void *buffer, uint32_t len)
+int CM300SPIFlash::readBytes(uint32_t addr, void *buffer, uint32_t len)
 {
   check(addr + len <= number_of_pages_ * SPIFLASH_PAGE_SIZE);
   check(addr <= number_of_pages_ * SPIFLASH_PAGE_SIZE);
@@ -183,7 +183,7 @@ int CM300SPI_Flash::readBytes(uint32_t addr, void *buffer, uint32_t len)
   return ret;
 }
 
-int CM300SPI_Flash::writePage(uint32_t addr, uint8_t *buffer, uint32_t len)
+int CM300SPIFlash::writePage(uint32_t addr, uint8_t *buffer, uint32_t len)
 {
   check(len <= SPIFLASH_PAGE_SIZE);
   check(addr / SPIFLASH_PAGE_SIZE == (addr + len - 1) / SPIFLASH_PAGE_SIZE);
@@ -202,7 +202,7 @@ int CM300SPI_Flash::writePage(uint32_t addr, uint8_t *buffer, uint32_t len)
   return ret;
 }
 
-int CM300SPI_Flash::writeBytes(uint32_t addr, const void *buffer, uint32_t len)
+int CM300SPIFlash::writeBytes(uint32_t addr, const void *buffer, uint32_t len)
 {
   check(addr + len <= number_of_pages_ * SPIFLASH_PAGE_SIZE);
 
@@ -221,7 +221,7 @@ int CM300SPI_Flash::writeBytes(uint32_t addr, const void *buffer, uint32_t len)
   return DEVICE_OK;
 }
 
-int CM300SPI_Flash::eraseSmallRow(uint32_t addr)
+int CM300SPIFlash::eraseSmallRow(uint32_t addr)
 {
   int ret = DEVICE_OK;
 
@@ -239,7 +239,7 @@ int CM300SPI_Flash::eraseSmallRow(uint32_t addr)
   return ret;
 }
 
-int CM300SPI_Flash::eraseBigRow(uint32_t addr)
+int CM300SPIFlash::eraseBigRow(uint32_t addr)
 {
   check(addr <= number_of_pages_ * SPIFLASH_PAGE_SIZE);
   check((addr & (SPIFLASH_SMALL_ROW_SIZE - 1)) == 0);
@@ -257,7 +257,7 @@ int CM300SPI_Flash::eraseBigRow(uint32_t addr)
   return ret;
 }
 
-int CM300SPI_Flash::eraseChip()
+int CM300SPIFlash::eraseChip()
 {
   int ret = DEVICE_OK;
 
@@ -272,12 +272,12 @@ int CM300SPI_Flash::eraseChip()
   return ret;
 }
 
-void CM300SPI_Flash::setTransferDoneFlag(bool flag)
+void CM300SPIFlash::setTransferDoneFlag(bool flag)
 {
   transfer_done_ = flag;
 }
 
-bool CM300SPI_Flash::getTransferDoneFlag(void)
+bool CM300SPIFlash::getTransferDoneFlag(void)
 {
   return transfer_done_;
 }
