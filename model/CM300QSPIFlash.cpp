@@ -46,6 +46,7 @@ CM300QSPIFlash::CM300QSPIFlash()
         QSPI_CFG_ADDR_BITS_24, QSPI_CFG_BUS_DUAL, 
         8, QSPI_CFG_BUS_DUAL, 0);
 
+  // For AT25SF321
   qspi_.configureReadFormat(QSPI_CFG_BUS_DUAL, QSPI_CFG_BUS_DUAL);
   qspi_.configureWriteFormat(QSPI_CFG_BUS_SINGLE, QSPI_CFG_BUS_SINGLE);
 }
