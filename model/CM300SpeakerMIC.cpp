@@ -258,7 +258,7 @@ void CM300SpeakerMIC::pullBuffer()
   int16_t* p_s16 = (int16_t*)p_s32;
   for(uint32_t i = 0; i < block_words; i++)
   {
-    p_s16[i] = ((int16_t)(p_s32[i] >> 9))<<3; // 3 to make the recording sound louder.
+    p_s16[i] = ((int16_t)(p_s32[i] >> 9))*32; // 3 to make the recording sound louder.
   }
   qspi_flash.write(idx_addr, (const uint8_t*)p_s16, block_half_words);
   
