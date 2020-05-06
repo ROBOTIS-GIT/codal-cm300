@@ -183,5 +183,5 @@ void tcb_configure_args(void* tcb, PROCESSOR_WORD_TYPE ep, PROCESSOR_WORD_TYPE c
     tcbPointer->R2 = (uint32_t) pm;
 }
 
-extern PROCESSOR_WORD_TYPE __end__;
-PROCESSOR_WORD_TYPE codal_heap_start = (PROCESSOR_WORD_TYPE)(&__end__);
+extern PROCESSOR_WORD_TYPE _end;
+PROCESSOR_WORD_TYPE codal_heap_start = (PROCESSOR_WORD_TYPE)(&_end);
