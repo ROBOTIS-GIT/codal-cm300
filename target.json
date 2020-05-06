@@ -11,7 +11,6 @@
         "MBED_LEGACY_TOOLCHAIN":"GCC_ARM;"
     },
     "config":{
-        "MBED_CONF_NORDIC_NRF_LF_CLOCK_SRC": "NRF_LF_SRC_XTAL",
         "CONFIG_GPIO_AS_PINRESET": 1,
         "CONFIG_NFCT_PINS_AS_GPIOS": 1,
         "DEVICE_SRAM_BASE":"0x20000000",
