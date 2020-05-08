@@ -20,6 +20,7 @@
 
 #include "CodalConfig.h"
 #include "CM300Batsense.h"
+#include "device_pinmap.h"
 
 using namespace codal;
 

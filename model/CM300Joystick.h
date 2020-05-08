@@ -21,7 +21,6 @@
 #include "CM300IO.h"
 #include "Event.h"
 #include "Sensor.h"
-#include "device_pinmap.h"
 
 
 namespace codal
