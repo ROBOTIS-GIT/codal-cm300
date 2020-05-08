@@ -20,6 +20,8 @@
 
 #include "CodalConfig.h"
 #include "CM300SAADC.h"
+#include "device_pinmap.h"
+
 
 using namespace codal;
 

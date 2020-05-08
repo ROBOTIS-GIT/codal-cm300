@@ -20,6 +20,7 @@
 
 #include "CodalConfig.h"
 #include "CM300Joystick.h"
+#include "device_pinmap.h"
 
 using namespace codal;
 

@@ -19,7 +19,6 @@
 
 #include "CodalConfig.h"
 #include "CM300IO.h"
-#include "device_pinmap.h"
 #include "Event.h"
 #include "Sensor.h"
 
